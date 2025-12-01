@@ -8,7 +8,7 @@ import {PlusIcon, Trash2Icon} from "lucide-react";
 interface ScreenData {
   diagonal: number;
   ratio: number;
-  color: string; // Hex code
+  colour: string; // Tailwind colour name
 }
 
 // Defines the structure of the overall form values
@@ -58,13 +58,13 @@ const colourPalette: string[] = [
   'indigo-500'
 ];
 
-const getNextColor = (currentLength: number): string => {
+const getNextColour = (currentLength: number): string => {
   return colourPalette[currentLength % colourPalette.length];
 };
 
 const defaultScreens: ScreenData[] = [
-  {diagonal: 27, ratio: 1.7777777777777777, color: "#3b82f6"}, // Blue (16:9)
-  {diagonal: 32, ratio: 2.3333333333333335, color: "#10b981"}  // Emerald (21:9)
+  {diagonal: 27, ratio: 1.7777777777777777, colour: getNextColour(0)},
+  {diagonal: 32, ratio: 2.3333333333333335, colour: getNextColour(1)}
 ];
 
 // --- Sub-Components ---
@@ -81,9 +81,9 @@ interface ScreenInputCardProps {
 
 // Component for a single screen input card, integrated with react-hook-form
 const ScreenInputCard: React.FC<ScreenInputCardProps> = ({control, index, remove, screenCount, field, updateComparison, watch}) => {
-  // Use watch to get the current screen color for card styling
+  // Use watch to get the current screen colour for card styling
   const screenData = watch(`screens.${index}`);
-  const screenColor = screenData ? screenData.color : field.color;
+  const screenColour = screenData ? screenData.colour : field.colour;
 
   // Custom validation rule for positive numbers
   const positiveNumber = {
@@ -94,11 +94,11 @@ const ScreenInputCard: React.FC<ScreenInputCardProps> = ({control, index, remove
 
   return (
       <div
-          className="p-4 rounded-xl shadow-lg border"
-          style={{borderColor: `${screenColor}40`, backgroundColor: `${screenColor}10`}}
+          className={`p-4 rounded-xl shadow-lg border border-${screenColour}`}
+          style={{backgroundColor: `${screenColour}10`}}
       >
         <div className="flex justify-between items-center mb-4">
-          <h3 className="font-bold text-xl" style={{color: screenColor}}>Screen {index + 1}</h3>
+          <h3 className="font-bold text-xl" style={{color: screenColour}}>Screen {index + 1}</h3>
           {screenCount > 1 && (
               <button
                   onClick={() => {
@@ -157,14 +157,14 @@ const ScreenInputCard: React.FC<ScreenInputCardProps> = ({control, index, remove
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1"
-                   htmlFor={`screens[${index}].color`}>Outline Color</label>
+                   htmlFor={`screens[${index}].colour`}>Outline Color</label>
             <Controller
-                name={`screens.${index}.color` as const}
+                name={`screens.${index}.colour` as const}
                 control={control}
                 render={({field}) => (
                     <input
                         {...field}
-                        type="color"
+                        type="colour"
                         className="w-full h-10 p-1 border rounded-lg cursor-pointer"
                         onChange={(e) => {
                           field.onChange(e);
@@ -185,7 +185,7 @@ interface ResultRowProps {
 }
 
 const ResultRow: React.FC<ResultRowProps> = ({screen, index}) => (
-    <tr className="hover:bg-gray-50" style={{borderLeft: `4px solid ${screen.color}`}}>
+    <tr className="hover:bg-gray-50" style={{borderLeft: `4px solid ${screen.colour}`}}>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Screen {index + 1}</td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{screen.diagonal.toFixed(1)}</td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-700">{screen.width.toFixed(2)}</td>
@@ -194,21 +194,17 @@ const ResultRow: React.FC<ResultRowProps> = ({screen, index}) => (
     </tr>
 );
 
-// --- Main Component ---
-const App: React.FC = () => {
-  // 1. Initialize useForm with FormValues type
+const App = () => {
   const {control, watch, getValues, formState: {errors}} = useForm<FormValues>({
     defaultValues: {screens: defaultScreens},
     mode: "onBlur"
   });
 
-  // 2. Initialize useFieldArray for dynamic screen list
   const {fields, append, remove} = useFieldArray({
     control,
     name: "screens",
   });
 
-  // State for calculated data
   const [calculatedScreens, setCalculatedScreens] = useState<CalculatedScreen[]>([]);
   const [errorMsg, setErrorMsg] = useState<string>('');
 
@@ -266,32 +262,25 @@ const App: React.FC = () => {
     const newScreen: ScreenData = {
       diagonal: 24,
       ratio: 1.7777777777777777,
-      color: getNextColor(fields.length)
+      colour: getNextColour(fields.length)
     };
     append(newScreen);
   };
 
-  // --- JSX Render Helpers ---
-
   const ScreenBox = useMemo(() => calculatedScreens.map((screen, index) => (
       <div
           key={screen.id}
-          // Tailwind classes for the overlap logic:
-          // absolute top-1/2 left-1/2 centers the element
-          // transform -translate-x-1/2 -translate-y-1/2 applies the exact translation for centering
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
-                       border-[4px] transition-all duration-500 ease-in-out shadow-xl opacity-90 box-content"
+          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border-solid border-4 border-${screen.colour} transition-all duration-500 ease-in-out shadow-xl opacity-90 box-content w-[${screen.width * SCALE_FACTOR}px] h-[${screen.height * SCALE_FACTOR}px]`}
           style={{
             width: `${screen.width * SCALE_FACTOR}px`,
             height: `${screen.height * SCALE_FACTOR}px`,
-            borderColor: screen.color,
-            backgroundColor: `${screen.color}20`,
+            borderColor: screen.colour,
+            backgroundColor: `${screen.colour}20`,
             borderStyle: 'solid',
             zIndex: index + 1, // Stack order
           }}
       />
   )), [calculatedScreens]);
-
 
   return (
       <div
