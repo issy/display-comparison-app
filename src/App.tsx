@@ -47,7 +47,7 @@ const calculateDimensions = (diagonal: number, aspectRatio: number): CalculatedD
   return {width, height, area};
 };
 
-const colourPalette: string[] = [
+const colourPalette = [
   'amber-500',
   'emerald-500',
   'red-500',
@@ -56,7 +56,7 @@ const colourPalette: string[] = [
   'orange-500',
   'purple-500',
   'indigo-500'
-];
+] as const;
 
 const getNextColour = (currentLength: number): string => {
   return colourPalette[currentLength % colourPalette.length];
