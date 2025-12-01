@@ -1,5 +1,12 @@
-import React, {useState, useEffect, useCallback, useMemo} from 'react';
-import {useForm, useFieldArray, Controller, type UseFormReturn, type FieldValues} from 'react-hook-form';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {
+  Controller,
+  type FieldValues,
+  useFieldArray,
+  useForm,
+  type UseFormReturn
+} from 'react-hook-form';
+import {PlusIcon, Trash2Icon} from 'lucide-react';
 
 // --- Type Definitions ---
 
@@ -7,7 +14,7 @@ import {useForm, useFieldArray, Controller, type UseFormReturn, type FieldValues
 interface ScreenData {
   diagonal: number;
   ratio: number;
-  color: string; // Hex code
+  colour: string; // Tailwind colour name
 }
 
 // Defines the structure of the overall form values
@@ -57,8 +64,8 @@ const getNextColor = (currentLength: number): string => {
 const defaultScreens: ScreenData[] = [{
   diagonal: 27,
   ratio: 1.7777777777777777,
-  color: getNextColor(0)
-}, {diagonal: 32, ratio: 2.3333333333333335, color: getNextColor(1)}];
+  colour: getNextColor(0)
+}, {diagonal: 32, ratio: 2.3333333333333335, colour: getNextColor(1)}];
 
 // --- Sub-Components ---
 
@@ -82,9 +89,9 @@ const ScreenInputCard: React.FC<ScreenInputCardProps> = ({
    updateComparison,
    watch
 }) => {
-  // Use watch to get the current screen color for card styling
+  // Use watch to get the current screen colour for card styling
   const screenData = watch(`screens.${index}`);
-  const screenColor = screenData ? screenData.color : field.color;
+  const screenColor = screenData ? screenData.colour : field.colour;
 
   // Custom validation rule for positive numbers
   const positiveNumber = {
@@ -98,7 +105,7 @@ const ScreenInputCard: React.FC<ScreenInputCardProps> = ({
       style={{borderColor: `${screenColor}40`, backgroundColor: `${screenColor}10`}}
   >
     <div className="flex justify-between items-center mb-4">
-      <h3 className="font-bold text-xl" style={{color: screenColor}}>Screen {index + 1}</h3>
+      <h3 className="font-bold text-xl" style={{colour: screenColor}}>Screen {index + 1}</h3>
       {screenCount > 1 && (<button
           onClick={() => {
             remove(index);
@@ -107,12 +114,7 @@ const ScreenInputCard: React.FC<ScreenInputCardProps> = ({
           className="text-gray-500 hover:text-red-600 transition duration-150"
           type="button"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20"
-             fill="currentColor">
-          <path fillRule="evenodd"
-                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                clipRule="evenodd"/>
-        </svg>
+        <Trash2Icon />
       </button>)}
     </div>
     <div className="space-y-4">
@@ -156,13 +158,13 @@ const ScreenInputCard: React.FC<ScreenInputCardProps> = ({
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1"
-               htmlFor={`screens[${index}].color`}>Outline Color</label>
+               htmlFor={`screens[${index}].colour`}>Outline Color</label>
         <Controller
-            name={`screens.${index}.color` as const}
+            name={`screens.${index}.colour` as const}
             control={control}
             render={({field}) => (<input
                 {...field}
-                type="color"
+                type="colour"
                 className="w-full h-10 p-1 border rounded-lg cursor-pointer"
                 onChange={(e) => {
                   field.onChange(e);
@@ -181,7 +183,7 @@ interface ResultRowProps {
 }
 
 const ResultRow: React.FC<ResultRowProps> = ({screen, index}) => (
-    <tr className="hover:bg-gray-50" style={{borderLeft: `4px solid ${screen.color}`}}>
+    <tr className="hover:bg-gray-50" style={{borderLeft: `4px solid ${screen.colour}`}}>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Screen {index + 1}</td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{screen.diagonal.toFixed(1)}</td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-700">{screen.width.toFixed(2)}</td>
@@ -265,7 +267,7 @@ const App: React.FC = () => {
     setErrorMsg('');
 
     const newScreen: ScreenData = {
-      diagonal: 24, ratio: 1.7777777777777777, color: getNextColor(fields.length)
+      diagonal: 24, ratio: 1.7777777777777777, colour: getNextColor(fields.length)
     };
     append(newScreen);
   };
@@ -278,8 +280,8 @@ const App: React.FC = () => {
       style={{
         width: `${screen.width * SCALE_FACTOR}px`,
         height: `${screen.height * SCALE_FACTOR}px`,
-        borderColor: screen.color,
-        backgroundColor: `${screen.color}20`,
+        borderColor: screen.colour,
+        backgroundColor: `${screen.colour}20`,
         borderStyle: 'solid',
         zIndex: index + 1, // Stack order
       }}
@@ -313,12 +315,7 @@ const App: React.FC = () => {
                 className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition duration-200 shadow-md flex items-center gap-2"
                 type="button"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20"
-                   fill="currentColor">
-                <path fillRule="evenodd"
-                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                      clipRule="evenodd"/>
-              </svg>
+              <PlusIcon />
               Add Screen
             </button>
           </div>
