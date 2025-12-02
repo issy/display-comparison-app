@@ -1,75 +1,23 @@
-# React + TypeScript + Vite
+# 🖥️ Display Comparison Tool
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a web tool designed to help you visually compare the physical sizes and shapes of different computer monitors, TVs, or other screens.
 
-Currently, two official plugins are available:
+It allows you to input the diagonal size and aspect ratio (like 16:9 or 21:9) for multiple screens and see them overlaid on top of each other.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 How to Use
 
-## React Compiler
+Add Screens: Click the "Add Screen" button to start a new configuration.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+Define Dimensions: For each screen, enter:
 
-Note: This will impact Vite dev & build performances.
+Diagonal (in): The advertised screen size (e.g., 27).
 
-## Expanding the ESLint configuration
+Aspect Ratio (X:Y): The ratio of width to height (e.g., 16 and 9).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Calculate: Click the main Calculate & Update Comparison button.
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+Analyse:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+The "Visual Comparison" section shows the different screens stacked, demonstrating which screen is taller, wider, or larger overall.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+The table at the bottom of the page provides exact numerical measurements.
