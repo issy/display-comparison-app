@@ -77,8 +77,8 @@ const getNextColour = (currentLength: number): string => {
 };
 
 const defaultScreens: ScreenData[] = [
-  { diagonal: 27, aspectX: 16, aspectY: 9, colour: "#3b82f6" }, // 16:9
-  { diagonal: 32, aspectX: 21, aspectY: 9, colour: "#10b981" }, // 21:9
+  { diagonal: 27, aspectX: 16, aspectY: 9, colour: getNextColour(0) },
+  { diagonal: 34, aspectX: 21, aspectY: 9, colour: getNextColour(1) },
 ];
 
 // --- Sub-Components ---
