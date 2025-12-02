@@ -14,7 +14,8 @@
     "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",
     "prettier": "prettier --write .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
