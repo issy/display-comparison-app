@@ -29,6 +29,9 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Build app
+        run: pnpm build
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
